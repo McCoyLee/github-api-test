@@ -1,8 +1,7 @@
 name: Deploy to GitHub Pages
 
+# 由后端按需触发（预览：ref=ai/*；采纳后：ref=main）
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -10,9 +9,10 @@ permissions:
   pages: write
   id-token: write
 
+# 单环境：同一时刻只有一个部署，新派发会取消正在进行的
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
