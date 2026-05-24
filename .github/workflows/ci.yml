@@ -1,0 +1,69 @@
+name: CI
+# 在 AI 分支上验证代码改动；后端 agent 写完后会自动 dispatch
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'ai/**'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 必需文件存在
+        run: |
+          missing=""
+          for f in index.html; do
+            [ -f "$f" ] || missing="$missing $f"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::缺失文件:$missing"
+            exit 1
+          fi
+          echo "OK: required files present"
+
+      - name: HTML 基础解析
+        run: |
+          python3 - <<'PY'
+          import html.parser, sys
+          for path in ['index.html']:
+              with open(path, encoding='utf-8') as f:
+                  src = f.read()
+              # 简单括号配对
+              if src.count('<') != src.count('>'):
+                  print(f"::error file={path}::尖括号不配对 (<: {src.count('<')}, >: {src.count('>')})")
+                  sys.exit(1)
+              # 关键标签检查
+              for tag in ['<html', '</html>', '<body', '</body>']:
+                  if tag not in src:
+                      print(f"::error file={path}::缺关键标签 {tag}")
+                      sys.exit(1)
+              # 用 stdlib 解析器
+              p = html.parser.HTMLParser()
+              try:
+                  p.feed(src); p.close()
+                  print(f"OK: {path} parsed")
+              except Exception as e:
+                  print(f"::error file={path}::解析失败 {e}")
+                  sys.exit(1)
+          PY
+
+      - name: CSS 基础检查
+        if: hashFiles('style.css') != ''
+        run: |
+          python3 - <<'PY'
+          import sys
+          with open('style.css', encoding='utf-8') as f: src = f.read()
+          if src.count('{') != src.count('}'):
+              print(f"::error file=style.css::花括号不配对 ({src.count('{')} vs {src.count('}')})")
+              sys.exit(1)
+          print("OK: style.css braces balanced")
+          PY
+
+      - name: JS 语法
+        if: hashFiles('main.js') != ''
+        run: |
+          node --check main.js && echo "OK: main.js syntax"
