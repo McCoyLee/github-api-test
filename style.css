@@ -1,17 +1,33 @@
 :root {
-  --bg: #fafafa;
-  --fg: #1f2937;
+  --bg: #f5f3ff;
+  --fg: #1e1b4b;
   --accent: #7c3aed;
+  --accent-light: #a78bfa;
+  --card-bg: #ffffff;
 }
 
 * { box-sizing: border-box; }
 body {
   margin: 0;
   font-family: -apple-system, "Segoe UI", "PingFang SC", sans-serif;
-  background: var(--bg);
+  background: linear-gradient(135deg, #ede9fe 0%, #e0e7ff 50%, #f5f3ff 100%);
   color: var(--fg);
   display: flex;
   min-height: 100vh;
+  position: relative;
+}
+
+/* 背景装饰圆 */
+.bg-decor {
+  position: fixed;
+  top: -120px;
+  right: -120px;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 main {
@@ -19,13 +35,50 @@ main {
   margin: auto;
   padding: 48px 24px;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
-h1 { font-size: 2.4rem; margin-bottom: 0.4em; }
+/* 卡片容器 */
+.card {
+  background: var(--card-bg);
+  border: 2px solid var(--accent-light);
+  border-radius: 20px;
+  padding: 48px 32px;
+  box-shadow: 0 8px 32px rgba(124,58,237,0.10);
+}
+
+h1 {
+  font-size: 2.4rem;
+  margin-bottom: 0.4em;
+  color: var(--accent);
+}
+
 p { line-height: 1.7; }
-.hint { color: #6b7280; }
+
+.hint {
+  color: #6b7280;
+}
+.hint strong,
+.hint a {
+  color: var(--accent);
+}
 
 footer {
-  margin-top: 3rem;
+  margin-top: 2rem;
   color: #9ca3af;
+}
+footer a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+footer a:hover {
+  text-decoration: underline;
+  color: var(--accent-light);
+}
+
+/* 页面中所有强调文字 */
+strong {
+  color: var(--accent);
 }
