@@ -1,20 +1,80 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>我的小站</title>
-    <link rel="stylesheet" href="./style.css" />
-  </head>
-  <body>
-    <main>
-      <h1>👋 你好，世界</h1>
-      <p>这是一个由 <strong>App For Oneself</strong> 创建的静态网页。</p>
-      <p class="hint">和 AI 对话，让它修改这个页面 — 加段落、换颜色、加图片都行。</p>
-      <footer>
-        <small>powered by GitHub Pages</small>
-      </footer>
-    </main>
-    <script src="./main.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>斗地主 · 联机版</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <!-- 大厅界面 -->
+  <div id="lobby">
+    <h1>🃏 斗地主</h1>
+    <p class="subtitle">联机对战 · 网页版</p>
+    <div class="lobby-actions">
+      <button id="btn-create" class="btn primary">🏠 创建房间</button>
+      <div class="join-row">
+        <input type="text" id="input-join" placeholder="输入房间号加入" maxlength="6" />
+        <button id="btn-join" class="btn secondary">加入</button>
+      </div>
+    </div>
+    <div id="connection-status" class="status">等待连接…</div>
+  </div>
+
+  <!-- 游戏界面 -->
+  <div id="game" style="display:none">
+    <div id="game-header">
+      <span id="room-display"></span>
+      <button id="btn-leave" class="btn small">退出</button>
+    </div>
+
+    <!-- 上家 -->
+    <div id="player-top" class="player-area">
+      <div class="player-info">
+        <span class="player-name" id="top-name">等待中</span>
+        <span class="player-card-count" id="top-count">0 张</span>
+      </div>
+      <div class="played-cards" id="top-played"></div>
+    </div>
+
+    <!-- 底牌 -->
+    <div id="dizhu-cards" class="dizhu-cards"></div>
+
+    <!-- 自己 -->
+    <div id="player-bottom" class="player-area">
+      <div class="player-info">
+        <span class="player-name" id="bottom-name">我</span>
+        <span class="player-card-count" id="bottom-count">0 张</span>
+      </div>
+      <div class="my-hand" id="my-hand"></div>
+      <div class="played-cards" id="bottom-played"></div>
+    </div>
+
+    <!-- 下家 -->
+    <div id="player-right" class="player-area">
+      <div class="player-info">
+        <span class="player-name" id="right-name">等待中</span>
+        <span class="player-card-count" id="right-count">0 张</span>
+      </div>
+      <div class="played-cards" id="right-played"></div>
+    </div>
+
+    <!-- 操作栏 -->
+    <div id="action-bar">
+      <button id="btn-call" class="btn action" style="display:none">叫地主</button>
+      <button id="btn-not-call" class="btn action" style="display:none">不叫</button>
+      <button id="btn-play" class="btn primary action" style="display:none">出牌</button>
+      <button id="btn-pass" class="btn secondary action" style="display:none">不要</button>
+      <button id="btn-hint" class="btn small action" style="display:none">提示</button>
+    </div>
+
+    <!-- 消息 -->
+    <div id="message-area"></div>
+  </div>
+
+  <script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script>
+  <script src="./game.js"></script>
+  <script src="./network.js"></script>
+  <script src="./main.js"></script>
+</body>
 </html>
